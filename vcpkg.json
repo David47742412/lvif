@@ -1,0 +1,12 @@
+{
+  "name": "lvif",
+  "description": "software",
+  "version": "0.0.1",
+  "dependencies": [
+    "drogon",
+    "fmt",
+    "jwt-cpp",
+    "cryptopp",
+    "mongo-cxx-driver"
+  ]
+}
