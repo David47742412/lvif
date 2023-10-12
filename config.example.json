@@ -70,7 +70,8 @@
   },
   "custom_config": {
     "database": {
-      "uri": ""
+      "uri": "",
+      "name": ""
     },
     "jwt": {
       "secret": "",

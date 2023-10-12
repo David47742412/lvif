@@ -70,12 +70,13 @@
     },
     "custom_config": {
         "database": {
-            "uri": "mongodb://root:123456@localhost:27017"
+            "uri": "mongodb://root:123456@localhost:27017",
+            "name": "lvif"
         },
         "jwt": {
             "secret": "tdsadasdsa",
-            "issuer": "miko",
-            "host": "http://localhost:3001"
+            "issuer": "lvif",
+            "host": "http://localhost:3005"
         },
         "crypto": {
             "secret": "production.key_security"

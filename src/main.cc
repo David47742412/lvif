@@ -1,8 +1,19 @@
 #include <drogon/drogon.h>
-int main() {
+#include <src/database/database.hxx>
+#include <src/utils/crypto/crypto.hxx>
 
-    //Set HTTP listener address and port
+using namespace api::v1;
+
+int main() {
     drogon::app().loadConfigFile("./config.json");
+
+    MongoDb::init();
+
+    std::string pwd = "password";
+
+    //LOG_DEBUG << Crypto::encrypt(pwd);
+
+    //LOG_DEBUG << drogon::utils::getUuid();
 
     drogon::app().run();
     return 0;
