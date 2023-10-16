@@ -10,7 +10,7 @@ std::shared_ptr<drogon::HttpResponse> AuthService::login(const drogon::HttpReque
         auto userLogin = UserModel::findByEmailOrUsername(emailOrUsername);
         if (!userLogin) throw std::runtime_error("UNAUTHORIZED");
 
-        if (Crypto::compare(pwd, userLogin->password)) throw std::runtime_error("UNAUTHORIZED");
+        if (!Crypto::compare(pwd, userLogin->password)) throw std::runtime_error("UNAUTHORIZED");
 
         std::map<std::string, std::string> payload;
         payload["user_id"] = userLogin->_id;

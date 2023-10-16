@@ -8,6 +8,7 @@ std::shared_ptr<UserModel> api::v1::UserModel::findByEmailOrUsername(std::string
         auto userColl = db["user"];
         std::regex regexPattern("^[A-Za-z0-9+_.-]+@(.+)$"); // email?
         std::string &&prop = std::regex_match(emailOrUsername, regexPattern) ? "email" : "username";
+
         auto filter = bsoncxx::builder::basic::make_document(bsoncxx::builder::basic::kvp(prop, emailOrUsername));
 
         auto userDb = userColl.find_one(filter.view());
@@ -19,7 +20,7 @@ std::shared_ptr<UserModel> api::v1::UserModel::findByEmailOrUsername(std::string
         userResult->_id = (*userDb)["_id"].get_string();
         userResult->alias = (*userDb)["alias"].get_string();
         userResult->image = (*userDb)["image"].get_string();
-        userResult->lastName = (*userDb)["lastName"].get_string();
+        userResult->lastName = (*userDb)["last_name"].get_string();
         userResult->name = (*userDb)["name"].get_string();
         userResult->password = (*userDb)["password"].get_string();
         userResult->username = (*userDb)["username"].get_string();
@@ -32,7 +33,7 @@ std::shared_ptr<UserModel> api::v1::UserModel::findByEmailOrUsername(std::string
     }
 }
 
-Json::Value UserModel::toJson() {
+Json::Value UserModel::toJson() const {
     Json::Value objValue;
 
     objValue["_id"] = this->_id;

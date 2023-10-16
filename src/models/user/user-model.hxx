@@ -18,7 +18,7 @@ namespace api::v1 {
 
         static std::shared_ptr<UserModel> findByEmailOrUsername(std::string &emailOrUsername);
 
-        Json::Value toJson();
+        Json::Value toJson() const;
 
     };
 }
