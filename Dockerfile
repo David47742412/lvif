@@ -33,4 +33,4 @@ RUN cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=/vcpkg/scripts/build
 EXPOSE 3005
 
 #command
-CMD ["./build/miko-backend"]
+CMD ["./build/lvif"]
