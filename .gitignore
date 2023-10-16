@@ -3,6 +3,7 @@
 
 cmake-build-debug/
 cmake-build-release/
+build/config.json
 build/test/
 build/uploads/
 build/vcpkg_installed
