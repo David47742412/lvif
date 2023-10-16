@@ -30,7 +30,7 @@ RUN cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=/vcpkg/scripts/build
     cd build/ && make
 
 #port to expose
-EXPOSE 3002
+EXPOSE 3005
 
 #command
 CMD ["./build/miko-backend"]
