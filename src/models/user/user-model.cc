@@ -20,6 +20,7 @@ std::shared_ptr<UserModel> api::v1::UserModel::findByEmailOrUsername(std::string
         userResult->_id = (*userDb)["_id"].get_string();
         userResult->alias = (*userDb)["alias"].get_string();
         userResult->image = (*userDb)["image"].get_string();
+        userResult->email = (*userDb)["email"].get_string();
         userResult->lastName = (*userDb)["last_name"].get_string();
         userResult->name = (*userDb)["name"].get_string();
         userResult->password = (*userDb)["password"].get_string();
@@ -37,11 +38,12 @@ Json::Value UserModel::toJson() const {
     Json::Value objValue;
 
     objValue["_id"] = this->_id;
+    objValue["name"] = this->name;
+    objValue["lastName"] = this->lastName;
     objValue["alias"] = this->alias;
     objValue["image"] = this->image;
-    objValue["lastName"] = this->lastName;
-    objValue["name"] = this->name;
     objValue["username"] = this->username;
+    objValue["email"] = this->email;
 
     return objValue;
 }

@@ -12,6 +12,7 @@ namespace api::v1 {
         std::string alias;
         std::string image;
         std::string lastName;
+        std::string email;
         std::string name;
         std::string password;
         std::string username;
