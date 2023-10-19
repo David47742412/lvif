@@ -22,7 +22,7 @@ std::shared_ptr<drogon::HttpResponse> AuthService::login(const drogon::HttpReque
 
         resJson["statusCode"] = 200;
         resJson["message"] = Json::arrayValue;
-        resJson["body"] = userJson;
+        resJson["body"].append(userJson);
 
     } catch (...) {
         resJson["statusCode"] = 401;
