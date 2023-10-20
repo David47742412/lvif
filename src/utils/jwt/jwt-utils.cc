@@ -6,7 +6,8 @@ std::string api::v1::Jwt::sign(std::map<std::string, std::string> &payload) {
     try {
         const auto env = drogon::app().getCustomConfig();
         auto jwt = jwt::create();
-        jwt.set_issued_at(std::chrono::system_clock::now())
+        jwt.set_type("JWT")
+                .set_issued_at(std::chrono::system_clock::now())
                 .set_expires_at(std::chrono::system_clock::now() + std::chrono::hours(168))
                 .set_issuer(env["jwt"]["issuer"].asString())
                 .set_audience(env["jwt"]["issuer"].asString())
@@ -37,7 +38,7 @@ jwt::decoded_jwt<jwt::traits::kazuho_picojson> api::v1::Jwt::verify(std::string 
         verifier.verify(decoded);
         return decoded;
     } catch (const std::exception &ex) {
-        LOG_DEBUG << ex.what();
+        LOG_DEBUG << fmt::format("Error: {}", ex.what());
         throw ex;
     }
 }

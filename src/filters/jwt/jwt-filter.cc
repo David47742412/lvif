@@ -15,7 +15,7 @@ void JwtFilter::doFilter(const HttpRequestPtr &req,
         token = token.replace(0, bearer.size(), "");
 
         auto decoded = Jwt::verify(token);
-        req->setParameter("userId", decoded.get_payload_claim("user_id").as_string());
+        req->setParameter("user_id", decoded.get_payload_claim("user_id").as_string());
 
         fccb();
 

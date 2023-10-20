@@ -3,6 +3,7 @@
 #include <drogon/drogon.h>
 #include <chrono>
 #include <iostream>
+#include <fmt/format.h>
 
 #ifndef LVIF_JWT_UTILS_HXX
 #define LVIF_JWT_UTILS_HXX

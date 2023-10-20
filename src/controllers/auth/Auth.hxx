@@ -10,9 +10,14 @@ namespace api::v1 {
     public:
         METHOD_LIST_BEGIN
             METHOD_ADD(Auth::login, "/login", Post, Options);
+            METHOD_ADD(Auth::logout, "/logout", Get, Options, "api::v1::JwtFilter");
         METHOD_LIST_END
 
         static void login(const HttpRequestPtr &req,
-                   std::function<void(const HttpResponsePtr &)> &&callback);
+                          std::function<void(const HttpResponsePtr &)> &&callback);
+
+        static void logout(const HttpRequestPtr &req,
+                           std::function<void(const HttpResponsePtr &)> &&callback);
+
     };
 }
