@@ -1,7 +1,5 @@
 #include <drogon/drogon.h>
 #include <src/database/database.hxx>
-#include <src/utils/crypto/crypto.hxx>
-#include <fmt/format.h>
 
 using namespace api::v1;
 
@@ -10,6 +8,7 @@ int main() {
 
     MongoDb::init();
 
+    LOG_DEBUG << drogon::utils::getUuid();
     drogon::app().run();
     return 0;
 }

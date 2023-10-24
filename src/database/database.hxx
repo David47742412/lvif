@@ -1,7 +1,9 @@
-#include <mongocxx/database.hpp>
-#include <mongocxx/instance.hpp>
-#include <mongocxx/client.hpp>
+#include <iostream>
 #include <drogon/drogon.h>
+#include <mongocxx/client.hpp>
+#include <mongocxx/instance.hpp>
+#include <mongocxx/uri.hpp>
+#include <bsoncxx/json.hpp>
 
 #ifndef LVIF_DATABASE_HXX
 #define LVIF_DATABASE_HXX
@@ -15,7 +17,9 @@ namespace api::v1 {
 
     private:
         MongoDb() = default;
+
         ~MongoDb() = default;
+
         inline static mongocxx::database Db{};
         inline static mongocxx::client Client{};
     };
