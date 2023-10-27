@@ -28,7 +28,8 @@ Json::Value BookModel::find() {
             "template": 0,
             "user.template": 0,
             "user.password": 0
-        })"));
+        })"))
+        .unwind("$user");
 
         auto cursor = collection.aggregate(pipeline, aggregate);
 
