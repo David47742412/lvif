@@ -21,7 +21,6 @@ void WsBookController::handleNewConnection(const HttpRequestPtr &req, const WebS
         Subscriber subscriber;
         subscriber.id = _room.subscribe("book",
                                         [wsConnPtr](const std::string &topic, const std::string &message) {
-
                                             wsConnPtr->send(message);
                                         });
         wsConnPtr->setContext(std::make_shared<Subscriber>(std::move(subscriber)));

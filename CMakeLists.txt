@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.16.3)
 project(lvif VERSION 0.0.1 LANGUAGES CXX)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cc src/*.hxx src/*.cpp src/*.h)
+set(OpenCV_DIR "${VCPKG_INSTALLED_DIR}/x64-linux/share/opencv2")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.json ${CMAKE_CURRENT_BINARY_DIR}/config.json COPYONLY)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/config.json DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
@@ -40,6 +41,7 @@ find_package(fmt CONFIG REQUIRED)
 find_path(JWT_CPP_INCLUDE_DIRS "jwt-cpp/base.h")
 find_package(bsoncxx CONFIG REQUIRED)
 find_package(mongocxx CONFIG REQUIRED)
+find_package(OpenCV REQUIRED)
 
 target_link_libraries(
         ${PROJECT_NAME}
@@ -50,6 +52,7 @@ target_link_libraries(
         ${JWT_CPP_INCLUDE_DIRS}
         $<IF:$<TARGET_EXISTS:mongo::bsoncxx_static>,mongo::bsoncxx_static,mongo::bsoncxx_shared>
         $<IF:$<TARGET_EXISTS:mongo::mongocxx_static>,mongo::mongocxx_static,mongo::mongocxx_shared>
+        ${OpenCV_LIBS}
 )
 
 # ##############################################################################
@@ -68,7 +71,7 @@ aux_source_directory(src/plugins PLUGIN_SRC)
 aux_source_directory(src/models MODEL_SRC)
 
 drogon_create_views(${PROJECT_NAME} src/views
-                    ${CMAKE_CURRENT_BINARY_DIR})
+        ${CMAKE_CURRENT_BINARY_DIR})
 # use the following line to create views with namespaces.
 # drogon_create_views(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/views
 #                     ${CMAKE_CURRENT_BINARY_DIR} TRUE)
@@ -78,15 +81,17 @@ drogon_create_views(${PROJECT_NAME} src/views
 #                     ${CMAKE_CURRENT_BINARY_DIR} TRUE CHANGE_ME)
 
 target_include_directories(${PROJECT_NAME}
-                           PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
-        src/models)
+        PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        src/models
+)
 target_sources(${PROJECT_NAME}
-               PRIVATE
-               ${SRC_DIR}
-               ${CTL_SRC}
-               ${FILTER_SRC}
-               ${PLUGIN_SRC}
-               ${MODEL_SRC})
+        PRIVATE
+        ${SRC_DIR}
+        ${CTL_SRC}
+        ${FILTER_SRC}
+        ${PLUGIN_SRC}
+        ${MODEL_SRC})
 # ##############################################################################
 # uncomment the following line for dynamically loading views 
 # set_property(TARGET ${PROJECT_NAME} PROPERTY ENABLE_EXPORTS ON)

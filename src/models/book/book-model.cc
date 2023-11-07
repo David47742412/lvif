@@ -51,3 +51,22 @@ Json::Value BookModel::find() {
     }
     return response;
 }
+
+void BookModel::insert(Json::Value& body, std::string& userId) {
+    try {
+        auto db = MongoDb::getConnection();
+        auto bookColl = db["book"];
+
+        auto builder = bsoncxx::builder::stream::document();
+
+        auto docInsert =builder <<
+                "_id" << drogon::utils::getUuid() <<
+                "name" << body["name"].asString() <<
+                "description" << body["description"].asString();
+
+        //bookColl.insert_one()
+
+    } catch (const std::runtime_error &ex) {
+        LOG_DEBUG << ex.what();
+    }
+}
