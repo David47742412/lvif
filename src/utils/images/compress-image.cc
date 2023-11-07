@@ -2,18 +2,28 @@
 
 using namespace api::v1;
 
-bool
-CompressImage::base64ToImage(std::string &base64, const std::string &name, std::vector<int> &&compressParams = {}) {
+bool CompressImage::base64ToImage(const std::vector<uchar> &buffer, const std::string &name,
+                                  std::vector<int> &&compressParams) {
     try {
-        std::string decoded_data = Base64::decode(base64);
-        std::vector<uchar> data(decoded_data.begin(), decoded_data.end());
+        cv::Mat image = cv::imdecode(cv::Mat(buffer), cv::IMREAD_COLOR);
 
-        cv::Mat image = cv::imdecode(data, cv::IMREAD_UNCHANGED);
+        if (image.empty()) {
+            LOG_DEBUG << "Error decoding image.";
+            return false;
+        }
 
-        cv::imwrite(std::filesystem::current_path().parent_path() / "resource" / name, image, compressParams);
+        std::filesystem::path imagePath = std::filesystem::current_path().parent_path() / "src" / "resource" / name;
+        bool writeResult = cv::imwrite(imagePath.string(), image, compressParams);
+
+        if (!writeResult) {
+            int errorCode = errno;
+            LOG_DEBUG << "Error writing image. Error code: " << errorCode;
+            return false;
+        }
+
         return true;
     } catch (const std::exception &ex) {
-        LOG_DEBUG << "Error process image" << ex.what();
+        LOG_DEBUG << "Error processing image: " << ex.what();
         return false;
     }
 }

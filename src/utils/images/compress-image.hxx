@@ -11,7 +11,7 @@
 namespace api::v1 {
     class CompressImage {
     public:
-        static bool base64ToImage(std::string &base64, const std::string &name, std::vector<int> &&compressParams);
+        static bool base64ToImage(const std::vector<uchar> &buffer, const std::string &name, std::vector<int> &&compressParams);
     };
 }
 

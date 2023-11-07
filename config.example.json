@@ -34,7 +34,7 @@
       "./views"
     ],
     "dynamic_views_output_path": "",
-    "json_parser_stack_limit": 1000,
+    "json_parser_stack_limit": 100000,
     "enable_unicode_escaping_in_json": true,
     "float_precision_in_json": {
       "precision": 0,
@@ -62,13 +62,16 @@
     "pipelining_requests": 0,
     "gzip_static": true,
     "br_static": true,
-    "client_max_body_size": "1M",
+    "client_max_body_size": "10M",
     "client_max_memory_body_size": "64K",
     "client_max_websocket_message_size": "128K",
     "reuse_port": false,
     "enabled_compressed_request": false
   },
   "custom_config": {
+    "server": {
+      "host": ""
+    },
     "database": {
       "uri": "",
       "name": ""

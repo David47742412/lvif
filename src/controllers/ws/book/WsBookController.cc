@@ -7,7 +7,20 @@ void WsBookController::handleNewMessage(const WebSocketConnectionPtr &wsConnPtr,
     try {
         if (type == WebSocketMessageType::Pong) return;
 
+        Json::Reader reader;
+        Json::Value body;
+        bool transform = reader.parse(message, body);
 
+        if (transform) {
+            auto context = wsConnPtr->getContext<Subscriber>();
+            switch (body["action"].asInt()) {
+                case 1:
+                    BookService::insert(body, context->userId, context->workspace, context->ip);
+                    break;
+                default:
+                    break;
+            }
+        }
 
         _room.publish("book", BookService::find().toStyledString());
     } catch (const std::runtime_error &ex) {
@@ -19,6 +32,9 @@ void WsBookController::handleNewConnection(const HttpRequestPtr &req, const WebS
     try {
         wsConnPtr->send(BookService::find().toStyledString());
         Subscriber subscriber;
+        subscriber.userId = req->getParameter("user_id");
+        subscriber.workspace = req->getHeader("User-Agent");
+        subscriber.ip = req->getPeerAddr().toIp();
         subscriber.id = _room.subscribe("book",
                                         [wsConnPtr](const std::string &topic, const std::string &message) {
                                             wsConnPtr->send(message);

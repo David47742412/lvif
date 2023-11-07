@@ -27,7 +27,10 @@ namespace api::v1 {
     private:
         PubSubService <std::string> _room;
         struct Subscriber {
+            std::string userId;
             std::string roomName;
+            std::string workspace;
+            std::string ip;
             drogon::SubscriberID id;
         };
     };

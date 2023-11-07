@@ -1,6 +1,7 @@
 #include <src/database/database.hxx>
 #include <fmt/format.h>
 #include <bsoncxx/builder/stream/document.hpp>
+#include <src/utils/images/compress-image.hxx>
 
 #ifndef LVIF_BOOK_MODEL_HXX
 #define LVIF_BOOK_MODEL_HXX
@@ -11,7 +12,7 @@ namespace api::v1 {
 
         static Json::Value find();
 
-        static void insert(Json::Value &body, std::string &userId);
+        static bool insert(Json::Value &body, std::string &&userId, std::string &&workspace, std::string &&ip);
 
         //static Json::Value update();
 

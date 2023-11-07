@@ -5,3 +5,9 @@ using namespace api::v1;
 Json::Value BookService::find() {
     return BookModel::find();
 }
+
+bool BookService::insert(Json::Value &book, std::string &userId, std::string &workspace, std::string &ip) {
+    return BookModel::insert(book, userId.c_str(), workspace.c_str(), ip.c_str());
+}
+
+

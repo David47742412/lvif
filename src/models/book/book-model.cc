@@ -29,7 +29,7 @@ Json::Value BookModel::find() {
             "user.template": 0,
             "user.password": 0
         })"))
-        .unwind("$user");
+                .unwind("$user");
 
         auto cursor = collection.aggregate(pipeline, aggregate);
 
@@ -52,21 +52,38 @@ Json::Value BookModel::find() {
     return response;
 }
 
-void BookModel::insert(Json::Value& body, std::string& userId) {
+bool BookModel::insert(Json::Value &body, std::string &&userId, std::string &&workspace, std::string &&ip) {
     try {
         auto db = MongoDb::getConnection();
         auto bookColl = db["book"];
 
         auto builder = bsoncxx::builder::stream::document();
 
-        auto docInsert =builder <<
-                "_id" << drogon::utils::getUuid() <<
-                "name" << body["name"].asString() <<
-                "description" << body["description"].asString();
+        auto now = std::chrono::system_clock::now();
+        std::time_t now_time = std::chrono::system_clock::to_time_t(now);
 
-        //bookColl.insert_one()
+
+        auto docInsert = builder <<
+                                 "_id" << drogon::utils::getUuid() <<
+                                 "name" << body["name"].asString() <<
+                                 "description" << body["description"].asString() <<
+                                 "image" << "https://i.imgur.com/gf8iePU.jpeg" <<
+                                 "user_id" << userId <<
+                                 "template" << bsoncxx::builder::stream::open_document <<
+                                 "__create_date__" << std::ctime(&now_time) <<
+                                 "__update_date__" << std::ctime(&now_time) <<
+                                 "__workspace_create__" << workspace <<
+                                 "__workspace_update__" << workspace <<
+                                 "__ip_request__" << ip <<
+                                 "__deleted__" << false <<
+                                 bsoncxx::builder::stream::close_document;
+
+        bsoncxx::document::value docValue = docInsert << bsoncxx::builder::stream::finalize;
+        bookColl.insert_one(docValue.view());
+        return true;
 
     } catch (const std::runtime_error &ex) {
         LOG_DEBUG << ex.what();
+        return false;
     }
 }
