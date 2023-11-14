@@ -1,4 +1,5 @@
 #include "book-model.hxx"
+#include <fmt/format.h>
 
 using namespace api::v1;
 
@@ -80,6 +81,46 @@ bool BookModel::insert(Json::Value &body, std::string &&userId, std::string &&wo
 
         bsoncxx::document::value docValue = docInsert << bsoncxx::builder::stream::finalize;
         bookColl.insert_one(docValue.view());
+        return true;
+
+    } catch (const std::runtime_error &ex) {
+        LOG_DEBUG << ex.what();
+        return false;
+    }
+}
+
+bool BookModel::update(std::string &&bookId, Json::Value &body, std::string &&userId, std::string &&workspace,
+                       std::string &&ip) {
+    try {
+        auto db = MongoDb::getConnection();
+        auto collection = db["book"];
+
+        auto builder = bsoncxx::builder::stream::document();
+
+        auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+
+        auto document = builder << "$set" <<
+                                bsoncxx::builder::stream::open_document <<
+                                    "name" << body["name"].asString() <<
+                                    "description" << body["description"].asString() <<
+                                    "user_id" << userId <<
+                                    "template.__update_date__" << std::ctime(&now) <<
+                                    "template.__workspace_update__" << workspace <<
+                                    "template.__ip_request__" << ip <<
+                                bsoncxx::builder::stream::close_document <<
+                                bsoncxx::builder::stream::finalize;
+
+
+        auto filter = bsoncxx::builder::basic::make_document(
+                bsoncxx::builder::basic::kvp("_id", bookId),
+                bsoncxx::builder::basic::kvp("template.__deleted__", false)
+        );
+
+        collection.update_one(
+                filter.view(),
+                document.view()
+        );
+
         return true;
 
     } catch (const std::runtime_error &ex) {

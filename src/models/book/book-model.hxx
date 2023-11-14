@@ -14,7 +14,7 @@ namespace api::v1 {
 
         static bool insert(Json::Value &body, std::string &&userId, std::string &&workspace, std::string &&ip);
 
-        //static Json::Value update();
+        static bool update(std::string &&bookId, Json::Value &body, std::string &&userId, std::string &&workspace, std::string &&ip);
 
         //static Json::Value deleted();
 

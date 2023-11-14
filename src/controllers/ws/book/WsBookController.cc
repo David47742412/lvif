@@ -17,6 +17,9 @@ void WsBookController::handleNewMessage(const WebSocketConnectionPtr &wsConnPtr,
                 case 1:
                     BookService::insert(body, context->userId, context->workspace, context->ip);
                     break;
+                case 2:
+                    BookService::update(body, context->userId, context->workspace, context->ip);
+                    break;
                 default:
                     break;
             }

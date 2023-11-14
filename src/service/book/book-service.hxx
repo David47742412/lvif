@@ -11,6 +11,7 @@ namespace api::v1 {
         static Json::Value find();
 
         static bool insert(Json::Value &book, std::string &userId, std::string &workspace, std::string &ip);
+        static bool update(Json::Value &book, std::string &userId, std::string &workspace, std::string &ip);
     };
 }
 
