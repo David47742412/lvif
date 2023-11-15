@@ -8,7 +8,6 @@ int main() {
 
     MongoDb::init();
 
-    LOG_DEBUG << drogon::utils::getUuid();
     drogon::app().run();
     return 0;
 }

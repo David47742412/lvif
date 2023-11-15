@@ -10,7 +10,7 @@ void WsBookController::handleNewMessage(const WebSocketConnectionPtr &wsConnPtr,
         Json::Reader reader;
         Json::Value body;
         bool transform = reader.parse(message, body);
-
+        std::string&& bookId = body["bookId"].asString();
         if (transform) {
             auto context = wsConnPtr->getContext<Subscriber>();
             switch (body["action"].asInt()) {
@@ -19,6 +19,9 @@ void WsBookController::handleNewMessage(const WebSocketConnectionPtr &wsConnPtr,
                     break;
                 case 2:
                     BookService::update(body, context->userId, context->workspace, context->ip);
+                    break;
+                case 3:
+                    BookService::deleted(bookId, context->userId, context->workspace, context->ip);
                     break;
                 default:
                     break;

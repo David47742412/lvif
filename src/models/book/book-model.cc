@@ -101,12 +101,12 @@ bool BookModel::update(std::string &&bookId, Json::Value &body, std::string &&us
 
         auto document = builder << "$set" <<
                                 bsoncxx::builder::stream::open_document <<
-                                    "name" << body["name"].asString() <<
-                                    "description" << body["description"].asString() <<
-                                    "user_id" << userId <<
-                                    "template.__update_date__" << std::ctime(&now) <<
-                                    "template.__workspace_update__" << workspace <<
-                                    "template.__ip_request__" << ip <<
+                                "name" << body["name"].asString() <<
+                                "description" << body["description"].asString() <<
+                                "user_id" << userId <<
+                                "template.__update_date__" << std::ctime(&now) <<
+                                "template.__workspace_update__" << workspace <<
+                                "template.__ip_request__" << ip <<
                                 bsoncxx::builder::stream::close_document <<
                                 bsoncxx::builder::stream::finalize;
 
@@ -117,6 +117,43 @@ bool BookModel::update(std::string &&bookId, Json::Value &body, std::string &&us
         );
 
         collection.update_one(
+                filter.view(),
+                document.view()
+        );
+
+        return true;
+
+    } catch (const std::runtime_error &ex) {
+        LOG_DEBUG << ex.what();
+        return false;
+    }
+}
+
+bool BookModel::deleted(std::string &&bookId, std::string &&userId, std::string &&workspace, std::string &&ip) {
+    try {
+        auto db = MongoDb::getConnection();
+        auto bookColl = db["book"];
+
+        auto filter = bsoncxx::builder::basic::make_document(
+                bsoncxx::builder::basic::kvp("_id", bookId),
+                bsoncxx::builder::basic::kvp("template.__deleted__", false)
+        );
+
+        auto builder = bsoncxx::builder::stream::document();
+
+        auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+
+        auto document = builder << "$set" <<
+                                bsoncxx::builder::stream::open_document <<
+                                "user_id" << userId <<
+                                "template.__deleted__" << true <<
+                                "template.__update_date__" << std::ctime(&now) <<
+                                "template.__workspace_update__" << workspace <<
+                                "template.__ip_request__" << ip <<
+                                bsoncxx::builder::stream::close_document <<
+                                bsoncxx::builder::stream::finalize;
+
+        bookColl.update_one(
                 filter.view(),
                 document.view()
         );
